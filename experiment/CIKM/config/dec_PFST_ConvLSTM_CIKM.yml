@@ -1,5 +1,5 @@
 NAME: dec_PFST_ConvLSTM
-MODEL_SAVE_PATH: '../../model_lib/CIKM_dec_PFST_ConvLSTM/radar_model.ckpt'
+MODEL_SAVE_PATH: 'F:/BaiduNetdiskWorkspace/Company_tianwu/radar-extrapolation/radar_model.ckpt'
 
 DATA:
   HEIGHT: 101

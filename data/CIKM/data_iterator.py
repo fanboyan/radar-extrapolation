@@ -10,7 +10,7 @@ sys.path.append(rootPath)
 
 from util.utils import *
 from torch.utils import data
-from scipy.misc import imsave,imread
+from imageio import imsave,imread
 from torch.utils.data import DataLoader
 import numpy as np
 import random
@@ -141,13 +141,13 @@ def sub_sample(batch_size,mode = 'random',data_type='train',index = None,type = 
     elif data_type == 'test':
         if index == None:
             raise('index need be initialize')
-        if index>4001 or index<1:
+        if index>13 or index<1:
             raise('index exceed')
         imgs = []
         b_cup = batch_size-1
         for batch_idx in range(batch_size):
-            if index>4001:
-                index = 4001
+            if index>13:
+                index = 13
                 b_cup = batch_idx
                 imgs.extend([imgs[-1] for _ in range(batch_size-batch_idx)])
                 break
@@ -160,7 +160,7 @@ def sub_sample(batch_size,mode = 'random',data_type='train',index = None,type = 
             imgs.append(np.array(batch_imgs))
             index = index+1
         imgs = np.array(imgs)
-        if index==4001:
+        if index==13:
             return imgs,(index,0)
         return imgs,(index,b_cup)
 
@@ -195,7 +195,7 @@ def sub_sample(batch_size,mode = 'random',data_type='train',index = None,type = 
 
 
 def sample(batch_size,mode = 'random',data_type='train',index = None):
-    save_root = '/mnt/A/CIKM2017/CIKM_datasets/' + data_type + '/'
+    save_root = 'F:/BaiduNetdiskWorkspace/Company_tianwu/PFST-LSTM/' + data_type + '/'
     if data_type == 'train':
         if mode == 'random':
             imgs = []
@@ -239,13 +239,13 @@ def sample(batch_size,mode = 'random',data_type='train',index = None):
     elif data_type == 'test':
         if index == None:
             raise('index need be initialize')
-        if index>4001 or index<1:
+        if index>13 or index<1:
             raise('index exceed')
         imgs = []
         b_cup = batch_size-1
         for batch_idx in range(batch_size):
-            if index>4001:
-                index = 4001
+            if index>13:
+                index = 13
                 b_cup = batch_idx
                 imgs.extend([imgs[-1] for _ in range(batch_size-batch_idx)])
                 break
@@ -258,7 +258,7 @@ def sample(batch_size,mode = 'random',data_type='train',index = None):
             imgs.append(np.array(batch_imgs))
             index = index+1
         imgs = np.array(imgs)
-        if index==4001:
+        if index==13:
             return imgs,(index,0)
         return imgs,(index,b_cup)
 

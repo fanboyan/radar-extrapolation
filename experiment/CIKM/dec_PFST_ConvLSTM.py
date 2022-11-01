@@ -1,8 +1,6 @@
 import sys
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-from thop import profile
-import time
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 curPath = os.path.abspath(os.path.dirname(__file__))
 rootPath = os.path.split(curPath)[0]
@@ -16,14 +14,10 @@ import math
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from model.PFSTEncodeDecode import *
-from skimage.measure import compare_ssim
-from skimage.transform import resize,rescale
-
 from data.CIKM.data_iterator import *
 from util.color_map import *
 from util.utils import *
 from model.varflow import *
-import skimage
 import cv2
 
 def to_device(data):
@@ -42,7 +36,8 @@ class sequence_model(object):
         self.name = name
         self.encoder_decoder_model = encoder_decoder_model
         self.info = info
-        self.test_save_root = '/mnt/A/meteorological/2500_ref_seq/CIKM_dec_PFST_ConvLSTM_test/'
+        self.test_save_root = 'F:/BaiduNetdiskWorkspace/Company_tianwu/radar-extrapolation/test1/'
+
         self.validation_save_root = '/mnt/A/meteorological/2500_ref_seq/CIKM_dec_PFST_ConvLSTM_validation/'
         self.optimizer = optim.Adam(self.encoder_decoder_model.parameters(), lr=self.info['TRAIN']['LEARNING_RATE'])
 
@@ -132,7 +127,8 @@ class sequence_model(object):
                     save_fold = validation_save_root + 'sample_' + str(ind) + '/'
                     clean_fold(save_fold)
                     for t in range(6, 16, 1):
-                        imsave(save_fold + 'img_' + str(t) + '.png', output_frames[bat_ind, t - 6,0, :, :, ])
+                        cv2.imwrite(save_fold + 'img_' + str(t) + '.png', output_frames[bat_ind, t - 6,0, :, :, ])
+                        # cv2.imwrite()
                     bat_ind = bat_ind + 1
 
             if b_cup == 3:
@@ -268,7 +264,11 @@ class sequence_model(object):
     #         break
 
     def test(self,is_save=True):
+        self.encoder_decoder_model = torch.load(
+            self.info['MODEL_SAVE_PATH']
+        )
         self.encoder_decoder_model.eval()
+
         test_save_root = self.test_save_root
         clean_fold(test_save_root)
         batch_size = 4
@@ -292,6 +292,7 @@ class sequence_model(object):
             output_frames = self.encoder_decoder_model(in_frame_dat)
             output_frames = denormalization(output_frames.data.cpu().numpy(), 255.0).astype(np.float32) / 255.0
             target_frames = denormalization(target_frame_dat.data.cpu().numpy(), 255.0).astype(np.float32) / 255.0
+
             current_loss = np.mean(np.square(output_frames - target_frames))
             loss = loss + current_loss
             count = count + 1
@@ -303,7 +304,7 @@ class sequence_model(object):
                     save_fold = test_save_root + 'sample_' + str(ind) + '/'
                     clean_fold(save_fold)
                     for t in range(6, 16, 1):
-                        imsave(save_fold + 'img_' + str(t) + '.png', output_frames[bat_ind, t - 6,0, :, :,])
+                        cv2.imwrite(save_fold + 'img_' + str(t) + '.png', output_frames[bat_ind, t - 6,0, :, :,])
                     bat_ind = bat_ind + 1
             if b_cup == 3:
                 pass
@@ -447,6 +448,6 @@ if __name__ == '__main__':
         info = configuration
     )
     # model.train()
-    model.load_model()
-    # model.test()
+    # model.load_model()
+    model.test()
 

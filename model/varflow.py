@@ -4,19 +4,19 @@ import sys
 import ctypes
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor, wait
-_BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-
-_VALID_DLL_PATH = [os.path.join(_BASE_PATH, '..', 'build', 'Release', 'varflow.dll'),
-                   os.path.join(_BASE_PATH, '..', 'build', 'libvarflow.so')]
-
-_VARFLOW_DLL_PATH = None
-for p in _VALID_DLL_PATH:
-    if os.path.exists(p):
-        _VARFLOW_DLL_PATH = p
-        break
-if _VARFLOW_DLL_PATH is None:
-    raise RuntimeError("DLL not found! Valid PATH=%s" %(_VALID_DLL_PATH))
-_CDLL = ctypes.cdll.LoadLibrary(_VARFLOW_DLL_PATH)
+# _BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+#
+# _VALID_DLL_PATH = [os.path.join(_BASE_PATH, '..', 'build', 'Release', 'varflow.dll'),
+#                    os.path.join(_BASE_PATH, '..', 'build', 'libvarflow.so')]
+#
+# _VARFLOW_DLL_PATH = None
+# for p in _VALID_DLL_PATH:
+#     if os.path.exists(p):
+#         _VARFLOW_DLL_PATH = p
+#         break
+# if _VARFLOW_DLL_PATH is None:
+#     raise RuntimeError("DLL not found! Valid PATH=%s" %(_VALID_DLL_PATH))
+# _CDLL = ctypes.cdll.LoadLibrary(_VARFLOW_DLL_PATH)
 
 class VarFlowFactory(object):
     def __init__(self, max_level, start_level, n1, n2, rho, alpha, sigma):
